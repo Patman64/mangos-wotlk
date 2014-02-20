@@ -844,7 +844,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 // if not available, use pActionInvoker
                 if (Unit* pTarget = GetTargetByType(action.killed_monster.target, pActionInvoker, pAIEventSender, reportTargetError, 0, SELECT_FLAG_PLAYER))
                 {
-                    if (Player* pPlayer2 = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
+                    if (Player* pPlayer2 = pTarget->GetControllingPlayer())
                         pPlayer2->RewardPlayerAndGroupAtEvent(action.killed_monster.creatureId, m_creature);
                 }
                 else if (reportTargetError)
@@ -1046,7 +1046,7 @@ void CreatureEventAI::JustDied(Unit* killer)
     if (m_creature->IsGuard())
     {
         // Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
-        if (Player* pKiller = killer->GetCharmerOrOwnerPlayerOrPlayerItself())
+        if (Player* pKiller = killer->GetControllingPlayer())
             m_creature->SendZoneUnderAttackMessage(pKiller);
     }
 

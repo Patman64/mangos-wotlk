@@ -1886,8 +1886,9 @@ bool WorldObject::IsControlledByPlayer() const
         case TYPEID_GAMEOBJECT:
             return ((GameObject*)this)->GetOwnerGuid().IsPlayer();
         case TYPEID_UNIT:
+            return ((Unit*)this)->GetCharmerOrOwnerGuid().IsPlayer();
         case TYPEID_PLAYER:
-            return ((Unit*)this)->IsCharmerOrOwnerPlayerOrPlayerItself();
+            return true;
         case TYPEID_DYNAMICOBJECT:
             return ((DynamicObject*)this)->GetCasterGuid().IsPlayer();
         case TYPEID_CORPSE:

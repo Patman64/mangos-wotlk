@@ -1895,7 +1895,7 @@ void GameObject::SetLootRecipient(Unit* pUnit)
         return;
     }
 
-    Player* player = pUnit->GetCharmerOrOwnerPlayerOrPlayerItself();
+    Player* player = pUnit->GetControllingPlayer();
     if (!player)                                            // normal creature, no player involved
         return;
 

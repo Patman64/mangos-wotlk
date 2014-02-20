@@ -1659,9 +1659,8 @@ class MANGOS_DLL_SPEC Unit : public WorldObject
 
             return this;
         }
-        bool IsCharmerOrOwnerPlayerOrPlayerItself() const;
-        Player* GetCharmerOrOwnerPlayerOrPlayerItself();
-        Player const* GetCharmerOrOwnerPlayerOrPlayerItself() const;
+        Player* GetControllingPlayer();
+        Player const* GetControllingPlayer() const;
 
         void SetPet(Pet* pet);
         void SetCharm(Unit* pet);

@@ -1023,7 +1023,7 @@ void Creature::SetLootRecipient(Unit* unit)
         return;
     }
 
-    Player* player = unit->GetCharmerOrOwnerPlayerOrPlayerItself();
+    Player* player = unit->GetControllingPlayer();
     if (!player)                                            // normal creature, no player involved
         return;
 

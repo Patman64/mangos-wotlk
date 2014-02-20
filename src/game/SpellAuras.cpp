@@ -783,12 +783,12 @@ void AreaAura::Update(uint32 diff)
             // not check group if target == owner or target == pet
             if (caster->GetCharmerOrOwnerGuid() != target->GetObjectGuid() && caster->GetObjectGuid() != target->GetCharmerOrOwnerGuid())
             {
-                Player* check = caster->GetCharmerOrOwnerPlayerOrPlayerItself();
+                Player* check = caster->GetControllingPlayer();
 
                 Group* pGroup = check ? check->GetGroup() : NULL;
                 if (pGroup)
                 {
-                    Player* checkTarget = target->GetCharmerOrOwnerPlayerOrPlayerItself();
+                    Player* checkTarget = target->GetControllingPlayer();
                     if (!checkTarget || !pGroup->SameSubGroup(check, checkTarget))
                         target->RemoveSingleAuraFromSpellAuraHolder(GetId(), GetEffIndex(), GetCasterGuid());
                 }
@@ -801,12 +801,12 @@ void AreaAura::Update(uint32 diff)
             // not check group if target == owner or target == pet
             if (caster->GetCharmerOrOwnerGuid() != target->GetObjectGuid() && caster->GetObjectGuid() != target->GetCharmerOrOwnerGuid())
             {
-                Player* check = caster->GetCharmerOrOwnerPlayerOrPlayerItself();
+                Player* check = caster->GetControllingPlayer();
 
                 Group* pGroup = check ? check->GetGroup() : NULL;
                 if (pGroup)
                 {
-                    Player* checkTarget = target->GetCharmerOrOwnerPlayerOrPlayerItself();
+                    Player* checkTarget = target->GetControllingPlayer();
                     if (!checkTarget)
                         target->RemoveSingleAuraFromSpellAuraHolder(GetId(), GetEffIndex(), GetCasterGuid());
                 }
@@ -2677,7 +2677,7 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                         return;
 
                     // Captured Totem Test Credit
-                    if (Player* pPlayer = pCaster->GetCharmerOrOwnerPlayerOrPlayerItself())
+                    if (Player* pPlayer = pCaster->GetControllingPlayer())
                         pPlayer->CastSpell(pPlayer, 42455, true);
                 }
 

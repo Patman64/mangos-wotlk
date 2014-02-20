@@ -327,7 +327,7 @@ void Unit::Update(uint32 update_diff, uint32 p_time)
         getThreatManager().UpdateForClient(update_diff);
 
     // update combat timer only for players and pets
-    if (isInCombat() && GetCharmerOrOwnerPlayerOrPlayerItself())
+    if (isInCombat() && GetControllingPlayer())
     {
         // Check UNIT_STAT_MELEE_ATTACKING or UNIT_STAT_CHASE (without UNIT_STAT_FOLLOW in this case) so pets can reach far away
         // targets without stopping half way there and running off.
@@ -638,7 +638,7 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
         SetInCombatWith(pVictim);
         pVictim->SetInCombatWith(this);
 
-        if (Player* attackedPlayer = pVictim->GetCharmerOrOwnerPlayerOrPlayerItself())
+        if (Player* attackedPlayer = pVictim->GetControllingPlayer())
             SetContestedPvP(attackedPlayer);
     }
 
@@ -708,7 +708,7 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
          *                      Preparation: Who gets credit for killing whom, invoke SpiritOfRedemtion?
          */
         // for loot will be used only if group_tap == NULL
-        Player* player_tap = GetCharmerOrOwnerPlayerOrPlayerItself();
+        Player* player_tap = GetControllingPlayer();
         Group* group_tap = NULL;
 
         // in creature kill case group/player tap stored for creature
@@ -1084,7 +1084,7 @@ void Unit::JustKilledCreature(Creature* victim, Player* responsiblePlayer)
     if (victim->GetInstanceId())
     {
         Map* m = victim->GetMap();
-        Player* creditedPlayer = GetCharmerOrOwnerPlayerOrPlayerItself();
+        Player* creditedPlayer = GetControllingPlayer();
         // TODO: do instance binding anyway if the charmer/owner is offline
 
         if (m->IsDungeon() && creditedPlayer)
@@ -6081,15 +6081,7 @@ Unit* Unit::GetCharmer() const
     return NULL;
 }
 
-bool Unit::IsCharmerOrOwnerPlayerOrPlayerItself() const
-{
-    if (GetTypeId() == TYPEID_PLAYER)
-        return true;
-
-    return GetCharmerOrOwnerGuid().IsPlayer();
-}
-
-Player* Unit::GetCharmerOrOwnerPlayerOrPlayerItself()
+Player* Unit::GetControllingPlayer()
 {
     ObjectGuid guid = GetCharmerOrOwnerGuid();
     if (guid.IsPlayer())
@@ -6098,7 +6090,7 @@ Player* Unit::GetCharmerOrOwnerPlayerOrPlayerItself()
     return GetTypeId() == TYPEID_PLAYER ? (Player*)this : NULL;
 }
 
-Player const* Unit::GetCharmerOrOwnerPlayerOrPlayerItself() const
+Player const* Unit::GetControllingPlayer() const
 {
     ObjectGuid guid = GetCharmerOrOwnerGuid();
     if (guid.IsPlayer())
@@ -7961,7 +7953,7 @@ void Unit::SetInCombatWith(Unit* enemy)
     // check for duel
     if (eOwner->GetTypeId() == TYPEID_PLAYER && ((Player*)eOwner)->duel)
     {
-        if (Player const* myOwner = GetCharmerOrOwnerPlayerOrPlayerItself())
+        if (Player const* myOwner = GetControllingPlayer())
         {
             if (myOwner->IsInDuelWith((Player const*)eOwner))
             {
@@ -10676,7 +10668,7 @@ Aura* Unit::GetDummyAura(uint32 spell_id) const
 
 void Unit::SetContestedPvP(Player* attackedPlayer)
 {
-    Player* player = GetCharmerOrOwnerPlayerOrPlayerItself();
+    Player* player = GetControllingPlayer();
 
     if (!player || (attackedPlayer && (attackedPlayer == player || player->IsInDuelWith(attackedPlayer))))
         return;
@@ -11050,12 +11042,12 @@ bool Unit::IsAllowedDamageInArea(Unit* pVictim) const
         return true;
 
     // non player controlled unit can damage anywhere
-    Player const* pOwner = GetCharmerOrOwnerPlayerOrPlayerItself();
+    Player const* pOwner = GetControllingPlayer();
     if (!pOwner)
         return true;
 
     // can damage non player controlled victim anywhere
-    Player const* vOwner = pVictim->GetCharmerOrOwnerPlayerOrPlayerItself();
+    Player const* vOwner = pVictim->GetControllingPlayer();
     if (!vOwner)
         return true;
 

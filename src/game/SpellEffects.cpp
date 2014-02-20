@@ -2403,7 +2403,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     if (!m_originalCaster || !unitTarget || unitTarget->GetTypeId() != TYPEID_UNIT)
                         return;
 
-                    if (Player* pPlayer = m_originalCaster->GetCharmerOrOwnerPlayerOrPlayerItself())
+                    if (Player* pPlayer = m_originalCaster->GetControllingPlayer())
                         pPlayer->KilledMonsterCredit(unitTarget->GetEntry(), unitTarget->GetObjectGuid());
 
                     return;
@@ -3456,7 +3456,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     Unit* friendTarget = !unitTarget || unitTarget->IsFriendlyTo(m_caster) ? unitTarget : unitTarget->getVictim();
                     if (friendTarget)
                     {
-                        Player* player = friendTarget->GetCharmerOrOwnerPlayerOrPlayerItself();
+                        Player* player = friendTarget->GetControllingPlayer();
                         if (!player || !player->IsInSameRaidWith((Player*)m_caster))
                             friendTarget = NULL;
                     }
